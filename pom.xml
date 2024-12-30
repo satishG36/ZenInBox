@@ -1,0 +1,192 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ZenInBox</groupId>
+  <artifactId>ZenInBox</artifactId>
+  <version>0.0.1-SNAPSHOT</version><properties>
+		<java.version>1.8</java.version>
+		<headless>false</headless> <!-- Default value -->
+		<env>dev</env> <!-- Default environment -->
+	</properties>
+
+	<dependencies>
+		<!-- Selenium Java -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>3.141.59</version>
+		</dependency>
+
+		<!-- WebDriverManager -->
+		<dependency>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>webdrivermanager</artifactId>
+			<version>5.7.0</version>
+		</dependency>
+
+		<!-- ExtentReports -->
+		<dependency>
+			<groupId>com.aventstack</groupId>
+			<artifactId>extentreports</artifactId>
+			<version>5.0.9</version>
+		</dependency>
+
+		<!-- TestNG -->
+		<dependency>
+		    <groupId>org.testng</groupId>
+		    <artifactId>testng</artifactId>
+		    <version>7.10.2</version>
+		    <scope>test</scope>
+		</dependency>	
+
+		<!-- JSON -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20220924</version>
+		</dependency>
+
+		<!-- Lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.24</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Rest-Assured -->
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>5.4.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<!-- Profile to run tests in dev environment -->
+		<profile>
+			<id>dev</id>
+			<properties>
+				<env>dev</env>
+			</properties>
+		</profile>
+
+		<!-- Profile to run tests in prod environment -->
+		<profile>
+			<id>prod</id>
+			<properties>
+				<env>prod</env>
+			</properties>
+		</profile>
+
+		<!-- Profile to run tests in headless mode -->
+		<profile>
+			<id>headless</id>
+			<properties>
+				<headless>true</headless>
+			</properties>
+		</profile>
+
+		<!-- Profile to run tests in parallel -->
+		<profile>
+			<id>parallel-tests</id>
+			<activation>
+				<property>
+					<name>parallel-tests</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>3.3.0</version>
+						<configuration>
+							<parallel>classes</parallel>
+							<useUnlimitedThreads>true</useUnlimitedThreads>
+							<threadCount>2</threadCount> <!-- adjust the thread count as needed -->
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Profile to run tests in Chrome -->
+		<profile>
+			<id>chrome</id>
+			<properties>
+				<browser>chrome</browser>
+				<headless>${headless}</headless>
+			</properties>
+		</profile>
+
+		<!-- Profile to run tests in Edge -->
+		<profile>
+			<id>edge</id>
+			<properties>
+				<browser>edge</browser>
+				<headless>${headless}</headless>
+			</properties>
+		</profile>
+
+		<!-- Custom Profile to Clean test-output Directory -->
+		<profile>
+			<id>clean-custom</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.8</version>
+						<executions>
+							<execution>
+								<phase>pre-clean</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<!-- Empty the test-output directory -->
+										<delete includeEmptyDirs="true">
+											<fileset dir="${project.basedir}/test-output" />
+										</delete>
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<build>
+		<plugins>
+			<!-- Compiler Plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+
+			<!-- Surefire Plugin for running tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<suiteXmlFiles>
+						<suiteXmlFile>testng.xml</suiteXmlFile>
+					</suiteXmlFiles>
+					<systemPropertyVariables>
+						<env>${env}</env> <!-- Pass the environment to your tests -->
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
