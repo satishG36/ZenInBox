@@ -1,4 +1,4 @@
-name:ZenInBox automation
+name: ZenInBox Automation test
 
 on:
   push:
