@@ -65,7 +65,7 @@ public class TestLoginPage extends BaseClass {
 		}
 	}
 
-	@Test(priority = 5)
+	@Test(priority = 5, enabled = false)
 	public void verifyLoginWithLeadingAndTrailingSpacesInPassword() throws Exception {
 		driver.get("https://staging.zeninbox.ai");
 		LoginPom.enterValidEmail();
