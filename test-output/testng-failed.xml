@@ -8,8 +8,8 @@
     <classes>
       <class name="com.zeninbox.authentication.TestLoginPage">
         <methods>
-          <include name="startBrowser"/>
           <include name="closeBrowser"/>
+          <include name="start_browser"/>
           <include name="verifyLoginWithLeadingAndTrailingSpacesInPassword"/>
         </methods>
       </class> <!-- com.zeninbox.authentication.TestLoginPage -->
